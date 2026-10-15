@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from app.scoring import analyze
+from app.privacy import mask_pii
 
 app = FastAPI(title="CyberShield API", version="0.1.0")
 
@@ -26,6 +27,7 @@ class AnalyzeResponse(BaseModel):
     urls: list[dict]
     text_score: float
     feed_override: bool
+    pii_masked: dict[str, int]
 
 
 @app.get("/health")
@@ -35,6 +37,8 @@ def health():
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 def analyze_message(req: AnalyzeRequest):
-    # Privacy: the raw message is used for this request only and is never stored
-    result = analyze(req.text)
+    # Privacy: personal data is masked before scoring, and the raw text is not stored
+    masked, counts = mask_pii(req.text)
+    result = analyze(masked)
+    result["pii_masked"] = counts
     return result
