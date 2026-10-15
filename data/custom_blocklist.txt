@@ -1,0 +1,4 @@
+# Demo blocklist: known malicious domains
+sbi-secure.xyz
+dhl-delivery-track.top
+http://netflix-billing-help.click

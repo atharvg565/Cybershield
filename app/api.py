@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from app.scoring import analyze
+from app.scoring import analyze, extract_urls
 from app.privacy import mask_pii
+from app.threat_intel import check_feeds
 
 app = FastAPI(title="CyberShield API", version="0.1.0")
 
@@ -39,6 +40,10 @@ def health():
 def analyze_message(req: AnalyzeRequest):
     # Privacy: personal data is masked before scoring, and the raw text is not stored
     masked, counts = mask_pii(req.text)
-    result = analyze(masked)
+
+    # Known-threat layer: check the URLs in the message against the local feeds
+    hits = check_feeds(extract_urls(masked))
+
+    result = analyze(masked, feed_hits=hits)
     result["pii_masked"] = counts
     return result
