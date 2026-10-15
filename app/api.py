@@ -6,9 +6,8 @@ from app.scoring import analyze, extract_urls
 from app.privacy import mask_pii
 from app.threat_intel import check_feeds
 
-app = FastAPI(title="CyberShield API", version="0.1.0")
+app = FastAPI(title="CyberShield API", version="0.2.0")
 
-# Allow a local frontend (Streamlit or React) to call the API during the demo
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -25,6 +24,7 @@ class AnalyzeResponse(BaseModel):
     risk: str
     score: float
     reasons: list[str]
+    critical_rules: list[str]
     urls: list[dict]
     text_score: float
     feed_override: bool
@@ -40,10 +40,7 @@ def health():
 def analyze_message(req: AnalyzeRequest):
     # Privacy: personal data is masked before scoring, and the raw text is not stored
     masked, counts = mask_pii(req.text)
-
-    # Known-threat layer: check the URLs in the message against the local feeds
     hits = check_feeds(extract_urls(masked))
-
     result = analyze(masked, feed_hits=hits)
     result["pii_masked"] = counts
     return result

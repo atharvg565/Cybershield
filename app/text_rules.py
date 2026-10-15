@@ -20,6 +20,14 @@ RULES = [
     (r"\b(aadhaar|aadhar|pan card|ssn|social security)\b",
      0.20, "Asks for identity numbers"),
 
+         # Advance-fee scams: a big credit that you must pay to withdraw
+    (r"\b(credited|deposited|credit|received|won)\b.*\b(withdraw|withdrawal|release|unlock|claim)\b",
+     0.35, "Promises a credit that is released only after a payment"),
+    (r"\b(pay|send|transfer|deposit)\b.*\b(to|for) (be able to |to )?(withdraw|withdrawal|release|unlock|activate|claim)\b",
+     0.35, "Asks you to pay before you can withdraw or claim money"),
+    (r"\b\d[\d,.]*\s*(million|lakh|crore|billion)\b",
+     0.10, "Mentions a very large sum of money"),
+
     # Payment demands
     (r"\b(pay|payment|transfer|send money|deposit|processing fee|registration fee|refund|fee)\b",
      0.10, "Mentions a payment or money transfer"),

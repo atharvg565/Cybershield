@@ -4,8 +4,10 @@ import json
 import time
 from pathlib import Path
 
+import numpy as np
 from sklearn.metrics import (
-    accuracy_score, confusion_matrix, f1_score, precision_score, recall_score,
+    accuracy_score, average_precision_score, confusion_matrix, f1_score,
+    matthews_corrcoef, precision_score, recall_score, roc_auc_score,
 )
 
 from app.scoring import analyze
@@ -13,9 +15,6 @@ from app.scoring import analyze
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "eval" / "message_metrics.json"
 
-# Hand-written labelled set. 1 = scam or phishing, 0 = legitimate.
-# Includes some hard cases: no brand names, no obvious URL, and legitimate
-# messages that use scam-like words (payment, password, net banking).
 LABELLED = [
     # Legitimate
     ("Your order has shipped. Track it at https://www.flipkart.com/orders", 0),
@@ -36,6 +35,7 @@ LABELLED = [
     ("Your HDFC statement for August is available on the net banking portal.", 0),
     ("Your parcel was delivered today. Thank you for shopping with us.", 0),
     ("Your Google Calendar event starts in 15 minutes.", 0),
+    ("Check this out: https://google.com", 0),
 
     # Scam or phishing
     ("URGENT: your SBI account is locked. Verify now at http://sbi-secure.xyz/login", 1),
@@ -52,18 +52,17 @@ LABELLED = [
     ("Your PAN card is not linked. Verify now or face penalty: http://pan-link-verify.top", 1),
     ("Hi, it's me, I lost my phone. Send me money on this UPI id urgently.", 1),
     ("Your WhatsApp will be deactivated. Confirm identity: http://192.168.4.7/whatsapp", 1),
-    # Modified or new attacks (no brand name, no obvious URL, or unusual wording)
     ("Unusual sign-in activity on your account. Please sign in to review: http://google-accounts-review.xyz/signin", 1),
     ("Hey, check this out: http://bit.ly/3xYz9", 1),
     ("Your package couldn't be delivered. Reschedule here: https://dhl-track-parcel.com/reschedule", 1),
     ("Final notice: your tax return has an error. Confirm your details today to avoid penalty.", 1),
     ("Part-time job offer: like posts and get paid daily. Join our telegram group to start.", 1),
     ("Your account will be closed. Reply with your password to keep it open.", 1),
+    ("20 million credited to your account. Pay 1 million to be able to withdraw.", 1),
 ]
 
 
 def load_csv(path: Path) -> list[tuple[str, int]]:
-    """Load your own labelled set. Columns: text, label (1/0 or phishing/legit)."""
     rows = []
     with open(path, encoding="utf-8", newline="") as f:
         for row in csv.DictReader(f):
@@ -73,37 +72,77 @@ def load_csv(path: Path) -> list[tuple[str, int]]:
     return rows
 
 
-def run(samples: list[tuple[str, int]]) -> dict:
-    y_true, y_pred, details = [], [], []
-    latencies = []
+def safe_div(a, b):
+    return round(a / b, 4) if b else 0.0
 
+
+def run(samples):
+    y_true, scores, details, latencies = [], [], [], []
     for text, label in samples:
         start = time.perf_counter()
         result = analyze(text)
         latencies.append((time.perf_counter() - start) * 1000)
-
-        # A message counts as flagged if it is Medium or High
-        flagged = int(result["risk"] != "Low")
         y_true.append(label)
-        y_pred.append(flagged)
+        scores.append(result["score"])
         details.append({
-            "text": text,
-            "true_label": label,
-            "risk": result["risk"],
-            "score": result["score"],
-            "reasons": result["reasons"],
+            "text": text, "true_label": label, "risk": result["risk"],
+            "score": result["score"], "reasons": result["reasons"],
         })
 
+    y_true = np.array(y_true)
+    scores = np.array(scores)
+    y_pred = (scores > 0.35).astype(int)  # flagged = Medium or High
+
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[0, 1]).ravel()
+    n = len(y_true)
+    n_pos, n_neg = int(tp + fn), int(tn + fp)
+
+    # Rule hit counts: how often each reason fires on scams vs legitimate messages
+    rule_hits: dict[str, dict[str, int]] = {}
+    for d in details:
+        for r in d["reasons"]:
+            key = r.split(': "')[0].split(": ")[-1][:90]
+            bucket = rule_hits.setdefault(key, {"scam": 0, "legit": 0})
+            bucket["scam" if d["true_label"] == 1 else "legit"] += 1
+
+    # Threshold sweep for ROC and precision-recall curves
+    thresholds = [0.0, 0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    sweep = []
+    for t in thresholds:
+        p = (scores >= t).astype(int) if t > 0 else np.ones_like(y_true)
+        ctn, cfp, cfn, ctp = confusion_matrix(y_true, p, labels=[0, 1]).ravel()
+        sweep.append({
+            "threshold": t,
+            "tpr_recall": safe_div(ctp, ctp + cfn),
+            "fpr": safe_div(cfp, cfp + ctn),
+            "precision": safe_div(ctp, ctp + cfp),
+        })
+
+    roc_auc = round(float(roc_auc_score(y_true, scores)), 4) if len(set(y_true)) > 1 else None
+    pr_auc = round(float(average_precision_score(y_true, scores)), 4) if len(set(y_true)) > 1 else None
+
     metrics = {
-        "total": len(samples),
-        "positives_scam": sum(y_true),
-        "negatives_legit": len(y_true) - sum(y_true),
-        "accuracy": round(accuracy_score(y_true, y_pred), 4),
-        "precision": round(precision_score(y_true, y_pred, zero_division=0), 4),
-        "recall": round(recall_score(y_true, y_pred, zero_division=0), 4),
-        "f1": round(f1_score(y_true, y_pred, zero_division=0), 4),
+        "total": n,
+        "positives_scam": n_pos,
+        "negatives_legit": n_neg,
+        "decision_threshold": 0.35,
         "confusion_matrix": {"tn": int(tn), "fp": int(fp), "fn": int(fn), "tp": int(tp)},
+        "confusion_matrix_rates": {
+            "true_negative_rate": safe_div(tn, n_neg),
+            "false_positive_rate": safe_div(fp, n_neg),
+            "false_negative_rate": safe_div(fn, n_pos),
+            "true_positive_rate": safe_div(tp, n_pos),
+        },
+        "accuracy": round(float(accuracy_score(y_true, y_pred)), 4),
+        "precision": round(float(precision_score(y_true, y_pred, zero_division=0)), 4),
+        "recall": round(float(recall_score(y_true, y_pred, zero_division=0)), 4),
+        "specificity": safe_div(tn, n_neg),
+        "f1": round(float(f1_score(y_true, y_pred, zero_division=0)), 4),
+        "matthews_corrcoef": round(float(matthews_corrcoef(y_true, y_pred)), 4),
+        "roc_auc": roc_auc,
+        "pr_auc": pr_auc,
+        "threshold_sweep": sweep,
+        "rule_hits": rule_hits,
         "avg_latency_ms": round(sum(latencies) / len(latencies), 2),
         "false_positives": [d for d in details if d["true_label"] == 0 and d["risk"] != "Low"],
         "false_negatives": [d for d in details if d["true_label"] == 1 and d["risk"] == "Low"],
@@ -111,31 +150,27 @@ def run(samples: list[tuple[str, int]]) -> dict:
     return metrics
 
 
-def print_summary(m: dict) -> None:
+def print_summary(m):
     c = m["confusion_matrix"]
+    r = m["confusion_matrix_rates"]
     print(f"\nSamples: {m['total']} ({m['positives_scam']} scam, {m['negatives_legit']} legitimate)")
-    print(f"Accuracy:  {m['accuracy']}")
-    print(f"Precision: {m['precision']}")
-    print(f"Recall:    {m['recall']}")
-    print(f"F1:        {m['f1']}")
     print(f"Confusion: TN={c['tn']} FP={c['fp']} FN={c['fn']} TP={c['tp']}")
-    print(f"Avg latency: {m['avg_latency_ms']} ms per message")
-
-    print(f"\nFalse positives ({len(m['false_positives'])}): legitimate messages flagged")
+    print(f"Rates: TNR={r['true_negative_rate']} FPR={r['false_positive_rate']} "
+          f"FNR={r['false_negative_rate']} TPR={r['true_positive_rate']}")
+    print(f"Accuracy={m['accuracy']} Precision={m['precision']} Recall={m['recall']} "
+          f"Specificity={m['specificity']} F1={m['f1']} MCC={m['matthews_corrcoef']}")
+    print(f"ROC AUC={m['roc_auc']} PR AUC={m['pr_auc']} Avg latency={m['avg_latency_ms']} ms")
+    print(f"\nFalse positives ({len(m['false_positives'])}):")
     for d in m["false_positives"]:
         print(f"  [{d['risk']} {d['score']}] {d['text']}")
-        for r in d["reasons"][:3]:
-            print(f"      - {r}")
-
-    print(f"\nFalse negatives ({len(m['false_negatives'])}): scams missed")
+    print(f"\nFalse negatives ({len(m['false_negatives'])}):")
     for d in m["false_negatives"]:
         print(f"  [{d['risk']} {d['score']}] {d['text']}")
 
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluate the message scorer")
-    parser.add_argument("--csv", type=Path, default=None,
-                        help="Optional labelled CSV with columns: text, label")
+    parser.add_argument("--csv", type=Path, default=None, help="Optional labelled CSV: text, label")
     args = parser.parse_args()
 
     samples = load_csv(args.csv) if args.csv else LABELLED

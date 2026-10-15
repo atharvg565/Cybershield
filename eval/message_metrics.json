@@ -1,18 +1,199 @@
 {
-  "total": 38,
-  "positives_scam": 20,
-  "negatives_legit": 18,
-  "accuracy": 0.7632,
-  "precision": 0.8235,
-  "recall": 0.7,
-  "f1": 0.7568,
+  "total": 40,
+  "positives_scam": 21,
+  "negatives_legit": 19,
+  "decision_threshold": 0.35,
   "confusion_matrix": {
-    "tn": 15,
-    "fp": 3,
-    "fn": 6,
-    "tp": 14
+    "tn": 17,
+    "fp": 2,
+    "fn": 8,
+    "tp": 13
   },
-  "avg_latency_ms": 24.37,
+  "confusion_matrix_rates": {
+    "true_negative_rate": 0.8947,
+    "false_positive_rate": 0.1053,
+    "false_negative_rate": 0.381,
+    "true_positive_rate": 0.619
+  },
+  "accuracy": 0.75,
+  "precision": 0.8667,
+  "recall": 0.619,
+  "specificity": 0.8947,
+  "f1": 0.7222,
+  "matthews_corrcoef": 0.53,
+  "roc_auc": 0.792,
+  "pr_auc": 0.7596,
+  "threshold_sweep": [
+    {
+      "threshold": 0.0,
+      "tpr_recall": 1.0,
+      "fpr": 1.0,
+      "precision": 0.525
+    },
+    {
+      "threshold": 0.1,
+      "tpr_recall": 0.9048,
+      "fpr": 0.4211,
+      "precision": 0.7037
+    },
+    {
+      "threshold": 0.2,
+      "tpr_recall": 0.7143,
+      "fpr": 0.4211,
+      "precision": 0.6522
+    },
+    {
+      "threshold": 0.25,
+      "tpr_recall": 0.6667,
+      "fpr": 0.2105,
+      "precision": 0.7778
+    },
+    {
+      "threshold": 0.3,
+      "tpr_recall": 0.6667,
+      "fpr": 0.1579,
+      "precision": 0.8235
+    },
+    {
+      "threshold": 0.35,
+      "tpr_recall": 0.6667,
+      "fpr": 0.1579,
+      "precision": 0.8235
+    },
+    {
+      "threshold": 0.4,
+      "tpr_recall": 0.619,
+      "fpr": 0.1053,
+      "precision": 0.8667
+    },
+    {
+      "threshold": 0.5,
+      "tpr_recall": 0.4762,
+      "fpr": 0.0526,
+      "precision": 0.9091
+    },
+    {
+      "threshold": 0.6,
+      "tpr_recall": 0.381,
+      "fpr": 0.0526,
+      "precision": 0.8889
+    },
+    {
+      "threshold": 0.7,
+      "tpr_recall": 0.1429,
+      "fpr": 0.0526,
+      "precision": 0.75
+    },
+    {
+      "threshold": 0.8,
+      "tpr_recall": 0.0,
+      "fpr": 0.0,
+      "precision": 0.0
+    },
+    {
+      "threshold": 0.9,
+      "tpr_recall": 0.0,
+      "fpr": 0.0,
+      "precision": 0.0
+    },
+    {
+      "threshold": 1.0,
+      "tpr_recall": 0.0,
+      "fpr": 0.0,
+      "precision": 0.0
+    }
+  ],
+  "rule_hits": {
+    "Contains credential-related words such as login, verify or secure": {
+      "scam": 5,
+      "legit": 1
+    },
+    "Claims to be a bank, government body or well-known brand": {
+      "scam": 4,
+      "legit": 3
+    },
+    "Mentions a payment or money transfer": {
+      "scam": 6,
+      "legit": 1
+    },
+    "Asks for passwords, OTPs or card details": {
+      "scam": 2,
+      "legit": 2
+    },
+    "Domain 'bbc.com' looks like the brand 'sbi'": {
+      "scam": 0,
+      "legit": 1
+    },
+    "Uses a high-risk domain extension (.xyz)": {
+      "scam": 3,
+      "legit": 0
+    },
+    "Connection is not HTTPS": {
+      "scam": 8,
+      "legit": 0
+    },
+    "Uses urgency or time pressure to rush you": {
+      "scam": 5,
+      "legit": 0
+    },
+    "Threatens to lock or close your account": {
+      "scam": 4,
+      "legit": 0
+    },
+    "Domain 'paypa1.com' looks like the brand 'paypal'": {
+      "scam": 1,
+      "legit": 0
+    },
+    "Uses fear of legal trouble or penalties": {
+      "scam": 3,
+      "legit": 0
+    },
+    "Demands payment under threat of penalty or arrest": {
+      "scam": 1,
+      "legit": 0
+    },
+    "Promises prizes, easy money or a job offer": {
+      "scam": 3,
+      "legit": 0
+    },
+    "Prize offer that requires a fee to claim": {
+      "scam": 1,
+      "legit": 0
+    },
+    "Uses a high-risk domain extension (.top)": {
+      "scam": 2,
+      "legit": 0
+    },
+    "Delivery message asking for a fee or confirmation": {
+      "scam": 2,
+      "legit": 0
+    },
+    "Promises investment returns": {
+      "scam": 1,
+      "legit": 0
+    },
+    "Uses a high-risk domain extension (.click)": {
+      "scam": 1,
+      "legit": 0
+    },
+    "Asks you to verify or update account details": {
+      "scam": 3,
+      "legit": 0
+    },
+    "Uses a high-risk domain extension (.work)": {
+      "scam": 1,
+      "legit": 0
+    },
+    "Requests gift cards or crypto, a common scam method": {
+      "scam": 1,
+      "legit": 0
+    },
+    "Asks for identity numbers": {
+      "scam": 1,
+      "legit": 0
+    }
+  },
+  "avg_latency_ms": 8.07,
   "false_positives": [
     {
       "text": "Your Amazon package will arrive tomorrow. Track: https://www.amazon.in/gp/your-account/order-history",
@@ -93,6 +274,15 @@
       "score": 0.15,
       "reasons": [
         "Promises prizes, easy money or a job offer"
+      ]
+    },
+    {
+      "text": "20 million credited to your account. Pay 1 million to be able to withdraw.",
+      "true_label": 1,
+      "risk": "Low",
+      "score": 0.1,
+      "reasons": [
+        "Mentions a payment or money transfer"
       ]
     }
   ]
