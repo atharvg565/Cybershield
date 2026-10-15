@@ -1,0 +1,178 @@
+{
+  "test_size": 47074,
+  "accuracy": 0.9961,
+  "precision": 0.9989,
+  "recall": 0.9919,
+  "f1": 0.9954,
+  "confusion_matrix": {
+    "tn": 26949,
+    "fp": 21,
+    "fn": 163,
+    "tp": 19941
+  },
+  "avg_inference_ms_per_url": 0.002,
+  "false_positive_examples": [
+    {
+      "url": "https://www.indianaffairs.nd.gov",
+      "score": 0.528
+    },
+    {
+      "url": "https://www.wirtschaftsfoerderung-dortmund.de",
+      "score": 0.707
+    },
+    {
+      "url": "https://www.british-business-bank.co.uk",
+      "score": 0.826
+    },
+    {
+      "url": "https://www.scottish-enterprise-mediacentre.com",
+      "score": 0.767
+    },
+    {
+      "url": "https://www.180360.com",
+      "score": 0.927
+    },
+    {
+      "url": "https://www.check24-partnerprogramm.de",
+      "score": 0.723
+    },
+    {
+      "url": "https://www.transcripts.foreverdreaming.org",
+      "score": 0.652
+    },
+    {
+      "url": "https://www.10000birds.com",
+      "score": 0.533
+    },
+    {
+      "url": "https://www.gastgeberverzeichnis-bodensee.com",
+      "score": 0.707
+    },
+    {
+      "url": "https://www.groupe-2v-services.com",
+      "score": 0.77
+    },
+    {
+      "url": "https://www.thebertonandeastbridge.onesuffolk.net",
+      "score": 0.944
+    },
+    {
+      "url": "https://www.501csw.usafe.af.mil",
+      "score": 0.749
+    },
+    {
+      "url": "https://www.112112ww.com",
+      "score": 0.89
+    },
+    {
+      "url": "https://www.19thcenturyart-facos.com",
+      "score": 0.518
+    },
+    {
+      "url": "https://www.en.candidates-2020.com",
+      "score": 0.907
+    },
+    {
+      "url": "https://www.bmvc2020-conference.com",
+      "score": 0.554
+    },
+    {
+      "url": "https://www.stiftung-industrie-alltagskultur.de",
+      "score": 0.767
+    },
+    {
+      "url": "https://www.formula1-dictionary.net",
+      "score": 0.501
+    },
+    {
+      "url": "https://www.diecezjawroclawsko-szczecinska.pl",
+      "score": 0.707
+    },
+    {
+      "url": "https://www.commonfuture-paris2015.org",
+      "score": 0.81
+    }
+  ],
+  "false_negative_examples": [
+    {
+      "url": "https://what.promerc.repl.co",
+      "score": 0.01
+    },
+    {
+      "url": "https://www.cfg.me",
+      "score": 0.002
+    },
+    {
+      "url": "https://s.smcbacmzu.icu",
+      "score": 0.002
+    },
+    {
+      "url": "https://www.michelonturismo.com.br",
+      "score": 0.007
+    },
+    {
+      "url": "https://dev-poliflek.pantheonsite.io",
+      "score": 0.03
+    },
+    {
+      "url": "https://www.tostudydrycleaning.ru",
+      "score": 0.004
+    },
+    {
+      "url": "https://s.smcbaomzu.icu",
+      "score": 0.002
+    },
+    {
+      "url": "https://www.netflix-vn.com",
+      "score": 0.006
+    },
+    {
+      "url": "https://www.instagram-apple.com",
+      "score": 0.009
+    },
+    {
+      "url": "https://bancwebofi--bancpichiweb.repl.co",
+      "score": 0.169
+    },
+    {
+      "url": "https://exxodus-wallet.webflow.io",
+      "score": 0.017
+    },
+    {
+      "url": "https://rarilbe.primerdrop.net",
+      "score": 0.004
+    },
+    {
+      "url": "https://www.myfreeserver.download",
+      "score": 0.004
+    },
+    {
+      "url": "https://www.zernina.com.ua",
+      "score": 0.001
+    },
+    {
+      "url": "https://s.smcbazmzu.icu",
+      "score": 0.002
+    },
+    {
+      "url": "https://www-smbc-card-com.hkfdke.cn",
+      "score": 0.045
+    },
+    {
+      "url": "https://yandex.ord7956.ru",
+      "score": 0.097
+    },
+    {
+      "url": "https://www.ak3.duckdns.org",
+      "score": 0.133
+    },
+    {
+      "url": "https://7fr1z.srvauto.com",
+      "score": 0.01
+    },
+    {
+      "url": "https://mizuhobank.erce13.com",
+      "score": 0.013
+    }
+  ]
+}
