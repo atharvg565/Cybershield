@@ -2,5 +2,10 @@
 {
   "version": 2,
   "buildCommand": null,
+  "outputDirectory": "."{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": null,
   "outputDirectory": "."
+}
 }
