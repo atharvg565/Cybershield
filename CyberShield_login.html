@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>CyberShield | Secure Access</title>
+  <style>
+    :root{color-scheme:dark;--bg:#07111f;--panel:#0d1b2b;--panel2:#102338;--line:#21384d;--text:#edf6ff;--muted:#91a7bc;--teal:#47e0c0;--blue:#68aaff;--danger:#ff7d8b}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(ellipse at 12% 8%,#123047 0,transparent 38%),radial-gradient(ellipse at 90% 90%,#103a3b 0,transparent 32%),var(--bg);color:var(--text);display:grid;place-items:center;padding:24px}
+    .shell{width:min(100%,1000px);display:grid;grid-template-columns:1.05fr .95fr;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:rgba(10,24,39,.88);box-shadow:0 28px 90px #0005}
+    .intro{padding:54px 48px;background:linear-gradient(145deg,#10283c,#0b1929 70%);display:flex;flex-direction:column;justify-content:space-between;gap:42px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px}.mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;color:#06141c;background:linear-gradient(135deg,var(--teal),var(--blue));font-size:22px}
+    .eyebrow{color:var(--teal);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin:0 0 14px}
+    h1{font-size:clamp(34px,4vw,49px);line-height:1.06;letter-spacing:-1.7px;margin:0 0 18px}h1 span{color:var(--teal)}.lead{color:var(--muted);line-height:1.7;max-width:390px;margin:0}
+    .features{display:grid;gap:15px}.feature{display:flex;gap:12px;align-items:flex-start;color:#c8d8e7;font-size:14px}.check{width:25px;height:25px;border-radius:8px;display:grid;place-items:center;flex:0 0 auto;background:#143b3b;color:var(--teal)}
+    .small{color:#7890a7;font-size:12px;line-height:1.6}
+    .formside{padding:48px;display:flex;flex-direction:column;justify-content:center}.formhead{margin-bottom:26px}.formhead h2{font-size:27px;letter-spacing:-.6px;margin:0 0 8px}.formhead p{color:var(--muted);margin:0;font-size:14px}
+    .tabs{display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:12px;background:#071421;border:1px solid var(--line);margin-bottom:22px}.tab{border:0;border-radius:9px;padding:11px;background:transparent;color:var(--muted);font:inherit;font-weight:700;cursor:pointer}.tab.active{background:#193247;color:var(--text)}
+    label{display:block;font-size:13px;font-weight:700;margin:17px 0 8px;color:#d8e5f2}input{width:100%;border:1px solid #294257;background:#081522;border-radius:11px;padding:14px 13px;color:var(--text);font:inherit;outline:none}input:focus{border-color:var(--teal);box-shadow:0 0 0 3px #47e0c018}
+    .submit{margin-top:23px;width:100%;border:0;border-radius:11px;padding:14px;background:linear-gradient(100deg,var(--teal),#7bc8ff);color:#071520;font:inherit;font-weight:850;cursor:pointer}.submit:disabled{opacity:.55;cursor:wait}
+    .message{display:none;margin-top:17px;padding:12px 13px;border:1px solid var(--line);border-radius:10px;font-size:13px;line-height:1.5;overflow-wrap:anywhere}.message.show{display:block}.message.error{border-color:#743d4b;background:#301923;color:#ffc1c8}.message.ok{border-color:#245d56;background:#102b2c;color:#b9fff0}
+    .secure{text-align:center;color:#8298ac;font-size:12px;margin-top:20px}.hidden{display:none!important}
+    @media(max-width:760px){body{padding:14px}.shell{grid-template-columns:1fr}.intro{padding:28px;gap:28px}.intro .features{grid-template-columns:1fr 1fr}.formside{padding:28px}.lead{max-width:unset}h1{font-size:36px}}
+    @media(max-width:430px){.intro .features{grid-template-columns:1fr}.intro{padding:24px}.formside{padding:24px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="intro">
+      <div>
+        <div class="brand"><div class="mark">⌁</div><span>CyberShield</span></div>
+        <p class="eyebrow" style="margin-top:54px">Think before you click</p>
+        <h1>Make every<br>message a <span>safer one.</span></h1>
+        <p class="lead">Sign in to analyse suspicious messages and review your security activity with CyberShield.</p>
+      </div>
+      <div class="features">
+        <div class="feature"><span class="check">✓</span><span>Phishing risk analysis for suspicious text</span></div>
+        <div class="feature"><span class="check">✓</span><span>Clear signals and reasons behind a result</span></div>
+        <div class="feature"><span class="check">✓</span><span>Private account access with role-based pages</span></div>
+      </div>
+      <div class="small">CyberShield is an assistive detection tool. Always verify sensitive requests through an official channel.</div>
+    </section>
+    <section class="formside">
+      <div class="formhead"><h2 id="formTitle">Welcome back</h2><p id="formSubtitle">Sign in to continue to your dashboard.</p></div>
+      <div class="tabs" role="tablist" aria-label="Account access">
+        <button class="tab active" id="loginTab" type="button">Sign in</button>
+        <button class="tab" id="signupTab" type="button">Create account</button>
+      </div>
+      <form id="authForm">
+        <label for="email">Email address</label>
+        <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" minlength="8" required>
+        <div id="confirmWrap" class="hidden"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Enter password again" minlength="8"></div>
+        <button class="submit" id="submitBtn" type="submit">Sign in securely</button>
+      </form>
+      <div class="message" id="message" role="status" aria-live="polite"></div>
+      <p class="secure">🔒 Secured by Supabase Auth · Never share your password or secret API keys.</p>
+    </section>
+  </main>
+
+  <!-- Supabase's browser library. Use only your publishable key here, never an sb_secret key. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Configuration: the project URL is prefilled. Paste your sb_publishable_... key below.
+    const SUPABASE_URL = "https://ljtqsltvdjynofdnwxir.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_mgd-S3q025L-v1Bzs5Jqow_xzIBD-T6";
+
+    // These files will be created in the next steps.
+    const USER_DASHBOARD = "user.html";
+    const ADMIN_DASHBOARD = "admin.html";
+
+    const $ = (id) => document.getElementById(id);
+    const loginTab = $("loginTab"), signupTab = $("signupTab");
+    const form = $("authForm"), message = $("message"), submitBtn = $("submitBtn");
+    let mode = "login";
+    let supabaseClient;
+
+    function showMessage(text, type = "ok") {
+      message.textContent = text;
+      message.className = `message show ${type}`;
+    }
+    function clearMessage() { message.textContent = ""; message.className = "message"; }
+
+    function setMode(nextMode) {
+      mode = nextMode;
+      const signingUp = mode === "signup";
+      loginTab.classList.toggle("active", !signingUp);
+      signupTab.classList.toggle("active", signingUp);
+      $("formTitle").textContent = signingUp ? "Create your account" : "Welcome back";
+      $("formSubtitle").textContent = signingUp ? "Create an account to use CyberShield." : "Sign in to continue to your dashboard.";
+      $("confirmWrap").classList.toggle("hidden", !signingUp);
+      $("confirmPassword").required = signingUp;
+      $("password").autocomplete = signingUp ? "new-password" : "current-password";
+      submitBtn.textContent = signingUp ? "Create account" : "Sign in securely";
+      clearMessage();
+    }
+    loginTab.addEventListener("click", () => setMode("login"));
+    signupTab.addEventListener("click", () => setMode("signup"));
+
+    async function routeByRole() {
+      const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+      if (userError || !user) return;
+      const { data: profile, error } = await supabaseClient
+        .from("profiles").select("role").eq("id", user.id).single();
+
+      if (error || !profile) {
+        showMessage("You are signed in, but your profile could not be loaded. Check that the profiles table and new-user trigger were created correctly.", "error");
+        return;
+      }
+      window.location.replace(profile.role === "admin" ? ADMIN_DASHBOARD : USER_DASHBOARD);
+    }
+
+    async function init() {
+      if (!window.supabase) {
+        showMessage("Supabase library could not load. Check your internet connection and reload.", "error");
+        submitBtn.disabled = true;
+        return;
+      }
+      if (!SUPABASE_PUBLISHABLE_KEY.startsWith("sb_publishable_")) {
+        showMessage("Setup needed: open login.html and replace PASTE_YOUR_SB_PUBLISHABLE_KEY_HERE with your Supabase publishable key (sb_publishable_...). Do not use the secret key.", "error");
+        submitBtn.disabled = true;
+        return;
+      }
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+      await routeByRole();
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearMessage();
+      if (!supabaseClient) return;
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      submitBtn.disabled = true;
+      submitBtn.textContent = mode === "signup" ? "Creating account…" : "Signing in…";
+      try {
+        if (mode === "signup") {
+          if (password !== $("confirmPassword").value) {
+            showMessage("The passwords do not match.", "error");
+            return;
+          }
+          const { data, error } = await supabaseClient.auth.signUp({ email, password });
+          if (error) throw error;
+          if (data.session) {
+            await routeByRole();
+          } else {
+            showMessage("Account created. Check your email for a confirmation link, then return here and sign in.", "ok");
+            setMode("login");
+          }
+        } else {
+          const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          await routeByRole();
+        }
+      } catch (err) {
+        showMessage(err?.message || "Something went wrong. Please try again.", "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = mode === "signup" ? "Create account" : "Sign in securely";
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>
