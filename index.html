@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberShield</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b1120;
+    --panel: #111a2e;
+    --panel-2: #172238;
+    --border: #22304d;
+    --text: #e6edf7;
+    --muted: #8b9ab5;
+    --accent: #38bdf8;
+    --low: #22c55e;
+    --medium: #f59e0b;
+    --high: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; font-family: "Inter", system-ui, Arial, sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #0e3a5c55, transparent),
+      radial-gradient(900px 500px at 110% 0%, #3b1f6e44, transparent),
+      var(--bg);
+    padding: 40px 20px;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; }
+
+  header { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  .logo {
+    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+    background: linear-gradient(135deg, #38bdf8, #6366f1); font-size: 22px;
+  }
+  h1 { margin: 0; font-size: 28px; letter-spacing: -0.5px; }
+  .tagline { color: var(--muted); margin: 4px 0 28px; font-size: 15px; }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+    padding: 22px; box-shadow: 0 10px 40px -12px #000a;
+  }
+  label { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  textarea {
+    width: 100%; margin-top: 10px; min-height: 130px; resize: vertical; padding: 14px;
+    border-radius: 12px; border: 1px solid var(--border); background: var(--panel-2);
+    color: var(--text); font: 15px/1.5 "Inter", system-ui, sans-serif; outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px #38bdf833; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .chip {
+    font-size: 13px; padding: 7px 12px; border-radius: 999px; cursor: pointer;
+    background: transparent; color: var(--muted); border: 1px solid var(--border);
+    transition: all .15s;
+  }
+  .chip:hover { color: var(--text); border-color: var(--accent); }
+
+  .actions { display: flex; justify-content: flex-end; margin-top: 18px; }
+  button.primary {
+    padding: 12px 26px; border: none; border-radius: 12px; cursor: pointer; font-weight: 600;
+    font-size: 15px; color: #03121f; background: linear-gradient(135deg, #38bdf8, #22d3ee);
+    box-shadow: 0 6px 20px -6px #38bdf8aa; transition: transform .1s, opacity .2s;
+  }
+  button.primary:hover { transform: translateY(-1px); }
+  button.primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+  .result { margin-top: 24px; }
+  .card { animation: rise .35s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .verdict {
+    display: flex; align-items: center; gap: 22px; padding: 22px; border-radius: 16px;
+    background: var(--panel); border: 1px solid var(--border); border-left-width: 6px;
+  }
+  .verdict.Low { border-left-color: var(--low); }
+  .verdict.Medium { border-left-color: var(--medium); }
+  .verdict.High { border-left-color: var(--high); }
+
+  .gauge {
+    width: 96px; height: 96px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+    background: conic-gradient(var(--c) calc(var(--p) * 1%), #1e2a44 0);
+  }
+  .gauge span {
+    width: 78px; height: 78px; border-radius: 50%; background: var(--panel);
+    display: grid; place-items: center; font-weight: 700; font-size: 18px;
+  }
+  .verdict-text h2 { margin: 0; font-size: 22px; }
+  .verdict-text p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+
+  .section { margin-top: 16px; padding: 20px 22px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; }
+  .section h3 { margin: 0 0 12px; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .reason { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 10px; background: var(--panel-2); margin-bottom: 8px; font-size: 14px; line-height: 1.45; }
+  .reason:last-child { margin-bottom: 0; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; background: var(--accent); }
+  .advice { font-size: 14px; line-height: 1.55; }
+  .note { font-size: 13px; color: var(--muted); margin-top: 10px; }
+  .error { margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: #3b1212; border: 1px solid #7f1d1d; color: #fecaca; font-size: 14px; }
+  footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 36px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🛡️</div>
+    <h1>CyberShield</h1>
+  </header>
+  <div class="tagline">Paste an SMS, email or link. We tell you the risk and exactly why.</div>
+
+  <div class="panel">
+    <label for="msg">Message or link</label>
+    <textarea id="msg" placeholder="Paste a suspicious message or link here..."></textarea>
+    <div class="chips">
+      <button class="chip" onclick="setExample(0)">Legitimate order</button>
+      <button class="chip" onclick="setExample(1)">Known-threat SBI link</button>
+      <button class="chip" onclick="setExample(2)">Lookalike brand fine</button>
+      <button class="chip" onclick="setExample(3)">Personal data</button>
+    </div>
+    <div class="actions">
+      <button id="go" class="primary" onclick="check()">Check message</button>
+    </div>
+  </div>
+
+  <div id="result" class="result"></div>
+  <footer>CyberShield · explainable phishing and fraud detection · prototype</footer>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000/analyze";
+const EXAMPLES = [
+  "Your order has shipped. Track it at https://www.flipkart.com/orders",
+  "URGENT: your SBI account is locked. Verify now at http://sbi-secure.xyz/login",
+  "Pay the Rs 500 fine within 24 hours or face arrest: http://paypa1.com/pay",
+  "Call me on +91 98765 43210 or mail ravi.k@gmail.com"
+];
+const COLORS = { Low: "#22c55e", Medium: "#f59e0b", High: "#ef4444" };
+
+function setExample(i) {
+  document.getElementById("msg").value = EXAMPLES[i];
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function adviceFor(risk) {
+  if (risk === "High") return "Do not click any link or reply. Verify through the official app or phone number, then report the message.";
+  if (risk === "Medium") return "Be careful. Check the sender independently before acting on this message.";
+  return "Looks safe. Still verify any unexpected request for money or personal details.";
+}
+
+function showError(msg) {
+  document.getElementById("result").innerHTML = `<div class="error">${esc(msg)}</div>`;
+}
+
+async function check() {
+  const text = document.getElementById("msg").value.trim();
+  const btn = document.getElementById("go");
+  if (!text) return showError("Please paste a message first.");
+
+  btn.disabled = true;
+  btn.textContent = "Checking...";
+  document.getElementById("result").innerHTML = "";
+
+  try {
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+    if (!res.ok) throw new Error("Server returned " + res.status);
+    const d = await res.json();
+    render(d);
+  } catch (e) {
+    showError("Could not reach the CyberShield server. Is it running on port 8000? (" + e.message + ")");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Check message";
+  }
+}
+
+function render(d) {
+  const color = COLORS[d.risk];
+  const pct = Math.round(d.score * 100);
+  const reasons = d.reasons.length
+    ? d.reasons.map(r => `<div class="reason"><span class="dot" style="background:${color}"></span><span>${esc(r)}</span></div>`).join("")
+    : `<div class="reason"><span class="dot"></span><span>No warning signs found.</span></div>`;
+
+  const piiCount = Object.values(d.pii_masked || {}).reduce((a, b) => a + b, 0);
+  const piiNote = piiCount
+    ? `<div class="note">🔒 ${piiCount} personal detail(s) masked before analysis: ${esc(JSON.stringify(d.pii_masked))}</div>`
+    : "";
+  const feedNote = d.feed_override
+    ? `<div class="note">⚠️ A link matched the known-threat feed, so the score is set to the maximum.</div>`
+    : "";
+
+  document.getElementById("result").innerHTML = `
+    <div class="card">
+      <div class="verdict ${d.risk}">
+        <div class="gauge" style="--c:${color}; --p:${pct}">
+          <span style="color:${color}">${pct}%</span>
+        </div>
+        <div class="verdict-text">
+          <h2 style="color:${color}">${d.risk} risk</h2>
+          <p>Risk score ${d.score} · ${d.urls.length} link(s) checked</p>
+        </div>
+      </div>
+      <div class="section">
+        <h3>Why this was flagged</h3>
+        ${reasons}
+        ${feedNote}${piiNote}
+      </div>
+      <div class="section">
+        <h3>What to do</h3>
+        <div class="advice">${adviceFor(d.risk)}</div>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>
