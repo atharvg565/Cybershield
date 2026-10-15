@@ -1,0 +1,99 @@
+{
+  "total": 38,
+  "positives_scam": 20,
+  "negatives_legit": 18,
+  "accuracy": 0.7632,
+  "precision": 0.8235,
+  "recall": 0.7,
+  "f1": 0.7568,
+  "confusion_matrix": {
+    "tn": 15,
+    "fp": 3,
+    "fn": 6,
+    "tp": 14
+  },
+  "avg_latency_ms": 24.37,
+  "false_positives": [
+    {
+      "text": "Your Amazon package will arrive tomorrow. Track: https://www.amazon.in/gp/your-account/order-history",
+      "true_label": 0,
+      "risk": "Medium",
+      "score": 0.495,
+      "reasons": [
+        "https://www.amazon.in/gp/your-account/order-history: Contains credential-related words such as login, verify or secure",
+        "Claims to be a bank, government body or well-known brand"
+      ]
+    },
+    {
+      "text": "Thanks for subscribing. Read the latest news at https://www.bbc.com/news",
+      "true_label": 0,
+      "risk": "High",
+      "score": 0.75,
+      "reasons": [
+        "https://www.bbc.com/news: Domain 'bbc.com' looks like the brand 'sbi'"
+      ]
+    },
+    {
+      "text": "Your HDFC statement for August is available on the net banking portal.",
+      "true_label": 0,
+      "risk": "Medium",
+      "score": 0.35,
+      "reasons": [
+        "Asks for passwords, OTPs or card details",
+        "Claims to be a bank, government body or well-known brand"
+      ]
+    }
+  ],
+  "false_negatives": [
+    {
+      "text": "Work from home and earn 5000 per day. Message us on WhatsApp to start.",
+      "true_label": 1,
+      "risk": "Low",
+      "score": 0.15,
+      "reasons": [
+        "Promises prizes, easy money or a job offer"
+      ]
+    },
+    {
+      "text": "Guaranteed returns! Invest now in our trading tips group.",
+      "true_label": 1,
+      "risk": "Low",
+      "score": 0.15,
+      "reasons": [
+        "Promises investment returns"
+      ]
+    },
+    {
+      "text": "Hi, it's me, I lost my phone. Send me money on this UPI id urgently.",
+      "true_label": 1,
+      "risk": "Low",
+      "score": 0.0,
+      "reasons": []
+    },
+    {
+      "text": "Your WhatsApp will be deactivated. Confirm identity: http://192.168.4.7/whatsapp",
+      "true_label": 1,
+      "risk": "Low",
+      "score": 0.2,
+      "reasons": [
+        "Asks you to verify or update account details"
+      ]
+    },
+    {
+      "text": "Hey, check this out: http://bit.ly/3xYz9",
+      "true_label": 1,
+      "risk": "Low",
+      "score": 0.0,
+      "reasons": []
+    },
+    {
+      "text": "Part-time job offer: like posts and get paid daily. Join our telegram group to start.",
+      "true_label": 1,
+      "risk": "Low",
+      "score": 0.15,
+      "reasons": [
+        "Promises prizes, easy money or a job offer"
+      ]
+    }
+  ]
+}
